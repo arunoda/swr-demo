@@ -6,11 +6,10 @@ async function jsonFetcher(path) {
     return res.json()
 }
 
-const getId = () => Math.ceil((Math.random() * 99999999) + 100)
-
 export default function Todos() {
     const [todoName, setTodoName] = useState('')
     const { data } = useSWR('/api/todos', jsonFetcher)
+
     if (!data) {
         return 'loading...'
     }
@@ -19,7 +18,7 @@ export default function Todos() {
         e.preventDefault()
 
         const fakeItem = {
-            id: getId(),
+            id: Math.random(),
             name: todoName,
             clientOnly: true
         }
