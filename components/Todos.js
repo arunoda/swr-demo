@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import useSWR from 'swr'
 import TodoList from './TodoList'
 
-const data = [
-    {id: Math.random(), name: "Learn Next.js"},
-    {id: Math.random(), name: "Learn SWR"}
-]
+async function jsonFetcher(path) {
+    const res = await fetch(path)
+    return res.json()
+}
 
 export default function Todos() {
+    const {data} = useSWR('/api/todos', jsonFetcher)
     const [listKey, setListKey] = useState(Math.random())
     
     if (!data) {
@@ -14,12 +16,7 @@ export default function Todos() {
     }
 
     const addTodo = async (todoName) => {
-        data.push({
-            id: Math.random(),
-            name: todoName
-        })
-
-        setListKey(Math.random())
+        throw new Error('Not implemeted yet!')
     }
 
     return (
