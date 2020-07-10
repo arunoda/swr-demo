@@ -1,14 +1,12 @@
-import useSWR, {mutate} from 'swr'
-import { useState } from 'react'
+import { useState, useReducer } from 'react'
 
-async function jsonFetcher(path) {
-    const res = await fetch(path)
-    return res.json()
-}
+const data = [
+    {id: Math.random(), name: "Learn Next.js"},
+    {id: Math.random(), name: "Learn SWR"}
+]
 
 export default function Todos() {
     const [todoName, setTodoName] = useState('')
-    const { data } = useSWR('/api/todos', jsonFetcher)
 
     if (!data) {
         return 'loading...'
@@ -17,40 +15,12 @@ export default function Todos() {
     const addTodo = async (e) => {
         e.preventDefault()
 
-        const fakeItem = {
+        data.push({
             id: Math.random(),
-            name: todoName,
-            clientOnly: true
-        }
-        mutate('/api/todos', [...data, fakeItem], false)
-        setTodoName('')
-
-        const addRes = await fetch('/api/todo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({name: todoName})
+            name: todoName
         })
 
-        if (!addRes.ok) {
-            throw new Error(`Adding todo failed: ${await addRes.text()}`)
-        }
-
-        const newTodo = await addRes.json();
-
-        mutate('/api/todos', (existingData) => {
-            const newData = []
-            for (const item of existingData) {
-                if (item.id === fakeItem.id) {
-                    newData.push(newTodo)
-                    continue
-                }
-                newData.push(item)
-            }
-            
-            return newData
-        }, false)
+        setTodoName('')
     }
 
     return (
