@@ -22,6 +22,7 @@ export default function TodoList({data, onNewTodo}) {
             </div>
             <form className="add-todo" onSubmit={handleSubmit}>
                 <input
+                    autoFocus
                     type="text"
                     placeholder="Enter todo name"
                     value={newTodoName}
