@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react'
+import { useState } from 'react'
 
 const data = [
     {id: Math.random(), name: "Learn Next.js"},
