@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useSWR from 'swr'
+import useSWR, {mutate} from 'swr'
 import TodoList from './TodoList'
 
 async function jsonFetcher(path) {
@@ -16,7 +16,22 @@ export default function Todos() {
     }
 
     const addTodo = async (todoName) => {
-        throw new Error('Not implemeted yet!')
+        const addRes = await fetch('/api/todo', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: todoName})
+        })
+    
+        if (!addRes.ok) {
+            const {error} = await addRes.json()
+            throw new Error(error.message);
+        }
+    
+        await mutate('/api/todos')
+    
+        setListKey(Math.random())
     }
 
     return (
