@@ -39,8 +39,22 @@ export default function Todos() {
             throw new Error(error.message);
         }
     
-        // Refetch the list
-        mutate('/api/todos')
+        // get the newly add to do
+        const newTodo = await addRes.json();
+
+        // replace above with the fake todo item
+        mutate('/api/todos', (existingData) => {
+            const newData = []
+            for (const item of existingData) {
+                if (item.id === fakeItem.id) {
+                    newData.push(newTodo)
+                    continue
+                }
+                newData.push(item)
+            }
+            
+            return newData
+        }, false)
     }
 
     return (
