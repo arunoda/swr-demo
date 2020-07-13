@@ -16,6 +16,16 @@ export default function Todos() {
     }
 
     const addTodo = async (todoName) => {
+        // Add fake item and re-render the UI
+        const fakeItem = {
+            id: Math.random(),
+            name: todoName,
+            clientOnly: true
+        }
+        mutate('/api/todos', [...data, fakeItem], false)
+        setListKey(Math.random())
+    
+        // Add the todo Item
         const addRes = await fetch('/api/todo', {
             method: 'POST',
             headers: {
@@ -29,9 +39,8 @@ export default function Todos() {
             throw new Error(error.message);
         }
     
-        await mutate('/api/todos')
-    
-        setListKey(Math.random())
+        // Refetch the list
+        mutate('/api/todos')
     }
 
     return (
