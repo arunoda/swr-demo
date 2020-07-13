@@ -1,4 +1,5 @@
 import { useState } from "react"
+import classNames from 'classnames'
 
 export default function TodoList({data, onNewTodo}) {
     const [newTodoName, setNewTodoName] = useState('')
@@ -14,9 +15,13 @@ export default function TodoList({data, onNewTodo}) {
                 {data.map(todo => (
                     <div
                         key={todo.id}
-                        className={todo.clientOnly? 'todo client-only' : 'todo'}
+                        className={classNames({
+                            todo: true,
+                            'client-only': todo.clientOnly,
+                            'errored': todo.errorMessage
+                        })}
                     >
-                        {todo.name}
+                        {todo.errorMessage || todo.name}
                     </div>
                 ))}
             </div>
@@ -32,4 +37,3 @@ export default function TodoList({data, onNewTodo}) {
             </form>
         </div>
     )
-}
