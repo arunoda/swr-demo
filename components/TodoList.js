@@ -37,3 +37,4 @@ export default function TodoList({data, onNewTodo}) {
             </form>
         </div>
     )
+}
