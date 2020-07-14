@@ -25,36 +25,55 @@ export default function Todos() {
         mutate('/api/todos', [...data, fakeItem], false)
         setListKey(Math.random())
     
-        // Add the todo Item
-        const addRes = await fetch('/api/todo', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({name: todoName})
-        })
+        try {
+            // Add the todo Item
+            const addRes = await fetch('/api/todo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name: todoName})
+            })
     
-        if (!addRes.ok) {
-            const {error} = await addRes.json()
-            throw new Error(error.message);
-        }
-    
-        // get the newly add to do
-        const newTodo = await addRes.json();
-
-        // replace above with the fake todo item
-        mutate('/api/todos', (existingData) => {
-            const newData = []
-            for (const item of existingData) {
-                if (item.id === fakeItem.id) {
-                    newData.push(newTodo)
-                    continue
-                }
-                newData.push(item)
+            if (!addRes.ok) {
+                const {error} = await addRes.json()
+                throw new Error(error.message);
             }
-            
-            return newData
-        }, false)
+    
+            // get the newly add to do
+            const newTodo = await addRes.json();
+    
+            // replace above with the fake todo item
+            mutate('/api/todos', (existingData) => {
+                const newData = []
+                for (const item of existingData) {
+                    if (item.id === fakeItem.id) {
+                        newData.push(newTodo)
+                        continue
+                    }
+                    newData.push(item)
+                }
+                
+                return newData
+            }, false)
+        } catch(err) {
+            // add the error message
+            mutate('/api/todos', (existingData) => {
+                const newData = []
+                for (const item of existingData) {
+                    if (item.id === fakeItem.id) {
+                        newData.push({
+                            id: fakeItem.id,
+                            errorMessage: err.message
+                        })
+                        continue
+                    }
+                    newData.push(item)
+                }
+                
+                return newData
+            }, false)
+        }
     }
 
     return (
